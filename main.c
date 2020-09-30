@@ -41,7 +41,7 @@ void nothing_func( unsigned int image_index,
                0, 0, iloc, jloc,  isize, jsize );
 }
 
-int main(int argc, char** argv) {
+int main( int argc, char** argv ) {
    static struct my_xvars xvars;
    static struct my_xwin_vars xwinvars;
    static struct dum_s s;        // will use for bridging
@@ -56,7 +56,17 @@ int main(int argc, char** argv) {
    (void) attach_root( &xvars, (char *) NULL, 100 );
    //dump_tecplot_ximage( xvars.ximage );
 
-   (void) xwindow_setup( &xwinvars, 800, 500, 10, 10 );
+   // For now default to leaching everything and displaying a small section
+   // but allow for the whole X server to be displayed. (If the default is to
+   // display teh whole thing, this will freak people out if they launch the
+   // code on the local X server!)
+   if( argc > 1 ) {
+      (void) xwindow_setup( &xwinvars, 
+                            (int) xvars.width, 
+                            (int) xvars.height, 10, 10 );
+   } else {
+      (void) xwindow_setup( &xwinvars, 800, 500, 10, 10 );
+   }
 
 while(1==1) {
 // (void) refresh_root( &xvars );
