@@ -16,25 +16,29 @@ struct dum_s {
 };
 
 // a function to use in the "using" function call
-void nothing_func( unsigned int n, void *arg )
+void nothing_func( unsigned int image_index,
+                   int iloc,
+                   int jloc,
+                   unsigned int isize,
+                   unsigned int jsize,
+                   void *arg )
 {
    struct dum_s *s;
    struct my_xvars *xvars;
    struct my_xwin_vars *xwinvars;
    XImage *xip;
 
-// printf("DOES NOTHING: num=%d ptr=%p ",n, arg);
-
+   // play type-casting tricks to get to the X11 storage structures
    s = (struct dum_s *) arg;
-   xvars = (struct my_xvars *) s->v1;
-   xwinvars = (struct my_xwin_vars *) s->v2;
+   xvars = (struct my_xvars *) s->v1;           // X11 being monitored
+   xwinvars = (struct my_xwin_vars *) s->v2;    // X11 displaying the window
 
-// a random choice of image from the tiled XImages...
-xip = ( xvars->ximage_array[0] );
-XPutImage( xwinvars->xdisplay, xwinvars->xwindow,
-           DefaultGC( xwinvars->xdisplay, xwinvars->xscreen ), xip,
-           0, 0, 0, 0,  100, 100 );
-
+   // address the sub-image by its index
+   xip = ( xvars->ximage_array[ image_index ] );
+   // display the image in the window
+   XPutImage( xwinvars->xdisplay, xwinvars->xwindow,
+               DefaultGC( xwinvars->xdisplay, xwinvars->xscreen ), xip,
+               0, 0, iloc, jloc,  isize, jsize );
 }
 
 int main(int argc, char** argv) {

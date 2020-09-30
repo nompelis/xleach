@@ -38,7 +38,10 @@ int dettach_root( struct my_xvars * );
 int compare_ximage( XImage *ximg1, XImage *ximg2 );
 
 int refresh_root_using( struct my_xvars *,
-                        void func( unsigned int, void *arg ), void *arg );
+                        void func( unsigned int,
+                                   int, int, unsigned int, unsigned int,
+                                   void * ),
+                        void *arg );
 
 #endif
 

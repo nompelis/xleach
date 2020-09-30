@@ -268,7 +268,10 @@ int compare_ximage( XImage *ximg1, XImage *ximg2 )
 
 
 int refresh_root_using( struct my_xvars *xvars,
-                        void func( unsigned int, void * ), void *arg )
+                        void func( unsigned int,
+                                   int, int, unsigned int, unsigned int,
+                                   void * ),
+                        void *arg )
 {
    unsigned int irem,jrem, i,j, nsub, imax;
 
@@ -305,7 +308,10 @@ printf("Refreshing...\n");fflush(stdout);//HACK
             xvars->ximage_array[n + nsub] = tmp;
 
             // call a function to handle the situation
-            (*func)( n, arg );
+            (*func)( n,
+                     (int) (i*imax),
+                     (int) (j*imax),
+                     iwidth, iheight, arg );
 
             printf("Changes: (%d, %d)   %d \n", i,j, iret );
          }
